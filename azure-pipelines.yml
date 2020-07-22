@@ -9,7 +9,11 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+name: $(Major).$(Minor).$(Rev:r)
+
 variables:
+  Major: 1
+  Minor: 0
   buildConfiguration: 'Release'
 
 steps:
@@ -24,15 +28,29 @@ steps:
     feedsToUse: 'select'
     vstsFeed: '57d1ab88-427d-408d-a04b-a138fa7875f5'
 
+#- task: DotNetCoreCLI@2
+#  displayName: 'dotnet pack'
+#  inputs:
+#    command: 'pack'
+#    packagesToPack: '**/*.csproj'
+#    versioningScheme: 'byPrereleaseNumber'
+#    majorVersion: '1'
+#    minorVersion: '0'
+#    patchVersion: '0'
+
+
+
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
-    versioningScheme: 'byPrereleaseNumber'
-    majorVersion: '1'
-    minorVersion: '0'
-    patchVersion: '0'
+    versioningScheme: 'byBuildNumber'
+#    packDirectory: '$(Build.ArtifactStagingDirectory)/packages/releases'
+#    arguments: '--configuration $(buildConfiguration)'
+#    nobuild: true
+
+
 
 - task: PublishBuildArtifacts@1
   displayName: 'publish build artifacts'
